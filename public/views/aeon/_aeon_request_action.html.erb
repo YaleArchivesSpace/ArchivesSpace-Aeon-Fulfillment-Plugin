@@ -6,6 +6,27 @@ mapper = AeonRecordMapper.mapper_for(record)
 
 <% unless mapper.hide_button? %>
 
+<%# this probably shouldn't be in the view, but it works for now. %>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('[rel="tooltip"]').tooltip()
+    .on("mouseenter", function () {
+        var _this = this;
+        $(this).tooltip("show");
+        $(".tooltip").on("mouseleave", function () {
+            $(_this).tooltip('hide');
+        });
+    }).on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+            if (!$(".tooltip:hover").length) {
+                $(_this).tooltip("hide");
+            }
+        }, 300);
+   })
+  });
+</script>
+
   <% if mapper.show_action? %>
     <%= form_tag "#{mapper.repo_settings[:aeon_web_url]}?action=11&type=200", :id => 'aeon_request_sub', :target => (mapper.repo_settings.fetch(:request_in_new_tab, false) ? 'aeon_request' : '_self') do |f| %>
       <% mapper.map.each do |name, value| %>
@@ -27,14 +48,17 @@ mapper = AeonRecordMapper.mapper_for(record)
 
   <% else %>
 
+  <div id="disabled-button-wrapper" tabindex="0" rel="tooltip" data-placement="bottom" data-toggle="tooltip"
+  data-html="true" data-trigger="manual" data-title="<%= t('plugins.aeon_fulfillment.request_button_inactive_message') %>">
     <button class="btn btn-default page_action request" disabled="true">
       <i class="fa fa-external-link fa-3x"></i><br/><%= t('plugins.aeon_fulfillment.request_button_label') %>
     </button>
+  </div>
 
   <% end %>
 
 <% end %>
 
-<% 
-  puts "Aeon Fulfillment Plugin -- Finished initializing plugin." 
+<%
+  puts "Aeon Fulfillment Plugin -- Finished initializing plugin."
 %>

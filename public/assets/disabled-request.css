@@ -1,0 +1,8 @@
+#disabled-button-wrapper {
+  display: inline-block;
+  cursor: not-allowed;
+}
+
+#disabled-button-wrapper .btn[disabled] {
+  pointer-events: none;
+}
